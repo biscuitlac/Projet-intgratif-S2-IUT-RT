@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HomeGuard — Impact Écologique</title>
+  <link rel="stylesheet" href="project integratif.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── Topbar ──────────────────────────────── -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-brand">
+      <div class="brand-icon">🛡</div>
+      Home<span><em>Guard</em></span>
+    </a>
+    <div class="topbar-right">
+      <span class="live-badge">EN DIRECT</span>
+      <span class="last-update" id="last-update">--:--:--</span>
+    </div>
+  </header>
+
+  <!-- ── Sidebar ─────────────────────────────── -->
+  <nav class="sidebar">
+    <span class="sidebar-section-label">Navigation</span>
+
+    <a href="stats de base.html" class="nav-link">
+      <span class="nav-icon">📊</span>
+      Vue d'ensemble
+    </a>
+    <a href="IA.html" class="nav-link">
+      <span class="nav-icon">🤖</span>
+      Détection IA
+    </a>
+    <a href="environnement.html" class="nav-link active">
+      <span class="nav-icon">🌿</span>
+      Impact Écologique
+    </a>
+
+    <div class="sidebar-footer">
+      <p id="server-info">Réseau : --<br/>IP : --<br/>API v--</p>
+    </div>
+  </nav>
+
+  <!-- ── Main content ────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-text">
+        <p class="page-eyebrow">// Numérique responsable</p>
+        <h1 class="page-title">Impact Écologique du Filtrage</h1>
+        <p class="page-subtitle" id="page-date-range">Aujourd'hui · chargement…</p>
+      </div>
+    </div>
+
+    <!-- ── KPI éco ──────────────────────────── -->
+    <section aria-label="Indicateurs environnementaux">
+      <div class="three-col">
+
+        <!-- Données économisées -->
+        <div class="eco-card">
+          <span class="eco-icon">💾</span>
+          <div class="eco-value" id="eco-data-value">
+            <span id="eco-data-number" class="loading"></span>
+            <span class="eco-unit" id="eco-data-unit">Mo</span>
+          </div>
+          <p class="eco-label">Données économisées</p>
+        </div>
+
+        <!-- CO₂ évité -->
+        <div class="eco-card">
+          <span class="eco-icon">🌱</span>
+     
+          <div class="eco-value" id="eco-co2-value">
+            <span id="eco-co2-number" class="loading"></span>
+            <span class="eco-unit" id="eco-co2-unit">g/CO₂/an</span>
+          </div>
+          <p class="eco-label">CO₂ évité sur une année</p>
+          </div>
+      </div>
+    </section>
+
+    <!-- ── Tendance cumulative ──────────────── -->
+    <div class="panel">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="dot dot-green"></span>
+          Données économisées / domaines
+        </h2>
+      <!--
+        <select id="eco-unit-selector" class="btn btn-ghost" style="cursor:pointer;">
+          <option value="MB">Afficher en MB</option>
+         <option value="GB">Afficher en GB</option> 
+        </select>
+        -->
+      </div>
+   
+      <div class="chart-area" style="height:220px;" id="chart-eco-cumulative-placeholder">
+        <canvas id="barre"></canvas>
+      </div>
+    </div>
+
+    <!-- ── Comparaison avant / après ─────────── -->
+    <div class="panel">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="dot dot-cyan"></span>
+          Comparaison Avant / Après filtrage
+        </h2>
+      </div>
+
+      <div id="compare-container">
+
+        <!-- Exemple statique — remplacer par JS -->
+        <div class="compare-row">
+          <span class="compare-label">Trafic DNS</span>
+          <div class="compare-bars">
+            <div class="compare-bar-row">
+              <span style="width:40px">Avant</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-before" id="bar-dns-before" style="width:100%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-dns-before" class="text-red font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+            <div class="compare-bar-row">
+              <span style="width:40px">Après</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-after" id="bar-dns-after" style="width:70%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-dns-after" class="text-green font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+          </div>
+          <span class="badge badge-green" id="badge-dns-gain" style="min-width:60px;">-- %</span>
+        </div>
+
+        <div class="compare-row">
+          <span class="compare-label">Données des requêtes en Mo</span>
+          <div class="compare-bars">
+            <div class="compare-bar-row">
+              <span style="width:40px">Avant</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-before" id="bar-data-before" style="width:100%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-data-before" class="text-red font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+            <div class="compare-bar-row">
+              <span style="width:40px">Après</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-after" id="bar-data-after" style="width:35%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-data-after" class="text-green font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+          </div>
+          <span class="badge badge-green" id="badge-data-gain" style="min-width:60px;">-- %</span>
+        </div>
+
+        <div class="compare-row">
+          <span class="compare-label">CO₂ en g/CO2/an</span>
+          <div class="compare-bars">
+            <div class="compare-bar-row">
+              <span style="width:40px">Avant</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-before" id="bar-co2-before" style="width:100%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-co2-before" class="text-red font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+            <div class="compare-bar-row">
+              <span style="width:40px">Après</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-after" id="bar-co2-after" style="width:35%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-co2-after" class="text-green font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+          </div>
+          <span class="badge badge-green" id="badge-co2-gain" style="min-width:60px;">-- %</span>
+        </div>
+
+        <div class="compare-row">
+          <span class="compare-label">Temps de chargement moyen par requêtes en ms</span>
+          <div class="compare-bars">
+            <div class="compare-bar-row">
+              <span style="width:40px">Avant</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-before" id="bar-perf-before" style="width:100%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-perf-before" class="text-red font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+            <div class="compare-bar-row">
+              <span style="width:40px">Après</span>
+              <div class="bar-track">
+                <div class="progress-fill bar-after" id="bar-perf-after" style="width:67%; height:8px; border-radius:4px;"></div>
+              </div>
+              <span id="val-perf-after" class="text-green font-mono" style="min-width:60px; text-align:right;">--</span>
+            </div>
+          </div>
+          <span class="badge badge-green" id="badge-perf-gain" style="min-width:60px;">-- %</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Méthodologie ─────────────────────── -->
+    <!--<div class="panel">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="dot dot-cyan"></span>
+          Méthodologie de calcul
+        </h2>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:4px;">
+        <div style="padding:16px; background:var(--bg-elevated); border-radius:var(--radius-sm);">
+          <p style="font-size:0.75rem; color:var(--cyan); font-family:var(--font-mono); margin-bottom:6px;">DONNÉES ÉCONOMISÉES</p>
+          <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.5;">
+            Chaque requête DNS bloquée évite le téléchargement de ressources tierces.<br/>
+            
+              DOM SCRIPTING — Injecter la taille moyenne observée depuis /api/eco/settings
+              Exemple : "Taille moyenne mesurée : 12 KB / requête"
+            
+            Taille moyenne : <strong class="text-primary" id="avg-request-size">-- KB</strong> / requête
+          </p>
+        </div>
+        <div style="padding:16px; background:var(--bg-elevated); border-radius:var(--radius-sm);">
+          <p style="font-size:0.75rem; color:var(--green); font-family:var(--font-mono); margin-bottom:6px;">CO₂ PAR MB</p>
+          <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.5;">
+            Basé sur le mix énergétique moyen du réseau internet européen.<br/>
+            
+              DOM SCRIPTING — Injecter le facteur d'émission utilisé
+              Source : /api/eco/settings → co2_per_mb
+            
+            Facteur utilisé : <strong class="text-primary" id="co2-factor">-- g CO₂/MB</strong>
+          </p>
+        </div>
+        <div style="padding:16px; background:var(--bg-elevated); border-radius:var(--radius-sm);">
+          <p style="font-size:0.75rem; color:var(--amber); font-family:var(--font-mono); margin-bottom:6px;">SOURCES</p>
+          <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.5;">
+            The Shift Project — Lean ICT Report 2023<br/>
+            IEA — Data Centres &amp; Networks 2024
+          </p>
+        </div>
+      </div>
+    </div> -->
+
+  </main>
+</div>
+
+<script>
+  /* ── Horloge ──────────────────────────────────── */
+  function updateClock() {
+    const el = document.getElementById('last-update');
+    if (el) el.textContent = new Date().toLocaleTimeString('fr-FR');
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── Date par défaut ──────────────────────────── */
+  (function() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const el = document.getElementById('page-date-range');
+    if (el) el.textContent = 'Aujourd\'hui · ' + dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  })();
+
+  /* ────────────────────────────────────────────────
+     TODO — À implémenter :
+
+     async function loadEcoStats(period = 'today') {
+       try {
+         const [eco, beforeAfter, settings] = await Promise.all([
+           fetch(`/api/eco/summary?period=${period}`).then(r => r.json()),
+           fetch(`/api/eco/before-after`).then(r => r.json()),
+           fetch(`/api/eco/settings`).then(r => r.json()),
+         ]);
+
+         // KPIs éco
+         document.getElementById('eco-data-number').classList.remove('loading');
+         document.getElementById('eco-data-number').textContent = eco.dataSaved.value.toLocaleString('fr-FR', {maximumFractionDigits:1});
+         document.getElementById('eco-data-unit').textContent = eco.dataSaved.unit;
+
+         document.getElementById('eco-co2-number').classList.remove('loading');
+         document.getElementById('eco-co2-number').textContent = eco.co2Saved.value.toLocaleString('fr-FR', {maximumFractionDigits:1});
+         document.getElementById('eco-co2-unit').textContent = eco.co2Saved.unit;
+
+         document.getElementById('eco-energy-number').classList.remove('loading');
+         document.getElementById('eco-energy-number').textContent = eco.energySaved.value.toFixed(3);
+         document.getElementById('eco-energy-unit').textContent = eco.energySaved.unit;
+
+         // Comparaison avant/après
+         beforeAfter.forEach(row => {
+           const gain = Math.round(100 - (row.after / row.before) * 100);
+           const pct  = Math.round((row.after / row.before) * 100);
+           document.getElementById(`val-${row.id}-before`).textContent = `${row.before} ${row.unit}`;
+           document.getElementById(`val-${row.id}-after`).textContent  = `${row.after} ${row.unit}`;
+           document.getElementById(`bar-${row.id}-after`).style.width  = pct + '%';
+           document.getElementById(`badge-${row.id}-gain`).textContent = `-${gain} %`;
+         });
+
+         // Méthodologie
+         document.getElementById('avg-request-size').textContent = settings.avgRequestSizeKb + ' KB';
+         document.getElementById('co2-factor').textContent = settings.co2PerMb + ' g CO₂/MB';
+         document.getElementById('filter-activation-date').textContent = new Date(settings.activatedAt).toLocaleDateString('fr-FR');
+
+       } catch(err) {
+         console.error('HomeGuard Eco API error:', err);
+       }
+     }
+
+     loadEcoStats('today');
+
+     ['today','week','month','year'].forEach((p, i) => {
+       const ids = ['btn-today','btn-week','btn-month','btn-year'];
+       document.getElementById(ids[i])?.addEventListener('click', () => loadEcoStats(p));
+     });
+  ──────────────────────────────────────────────── */
+</script>
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0">
+</script>
+<script src="environnement.js"></script>
+</body>
+</html>

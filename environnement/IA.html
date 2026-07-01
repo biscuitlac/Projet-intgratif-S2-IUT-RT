@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HomeGuard — Détection IA</title>
+  <link rel="stylesheet" href="project integratif.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── Topbar ──────────────────────────────── -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-brand">
+      <div class="brand-icon">🛡</div>
+      Home<span><em>Guard</em></span>
+    </a>
+    <div class="topbar-right">
+      <span class="live-badge">EN DIRECT</span>
+      <span class="last-update" id="last-update">--:--:--</span>
+    </div>
+  </header>
+
+  <!-- ── Sidebar ─────────────────────────────── -->
+  <nav class="sidebar">
+    <span class="sidebar-section-label">Navigation</span>
+
+    <a href="stats de base.html" class="nav-link">
+      <span class="nav-icon">📊</span>
+      Vue d'ensemble
+    </a>
+    <a href="ai.html" class="nav-link active">
+      <span class="nav-icon">🤖</span>
+      Détection IA
+    </a>
+    <a href="environnement.html" class="nav-link">
+      <span class="nav-icon">🌿</span>
+      Impact Écologique
+    </a>
+    <div class="sidebar-footer">
+      <p id="server-info">Réseau : --<br/>IP : --<br/>API v--</p>
+    </div>
+  </nav>
+
+  <!-- ── Main content ────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-text">
+        <p class="page-eyebrow">// Valeur ajoutée du projet</p>
+        <h1 class="page-title">Détection par Intelligence Artificielle</h1>
+        <p class="page-subtitle" id="page-date-range">Aujourd'hui · chargement…</p>
+      </div>
+    </div>
+
+    <!-- ── KPI IA ───────────────────────────── -->
+    <section aria-label="Indicateurs IA">
+      <div class="kpi-grid">
+
+        <!-- Détections IA uniquement -->
+        <div class="kpi-card accent-amber">
+          <p class="kpi-label">Détectés par IA</p>
+          <!--
+            DOM SCRIPTING — Domaines bloqués par l'IA mais absents des listes noires
+            Source : GET /api/ai/detections?mode=ai-only&period=today
+            Cibler : #kpi-ai-only
+          -->
+          <p class="kpi-value" id="kpi-ai-only"></p>
+
+        </div>
+
+        <!-- Score confiance moyen -->
+        <div class="kpi-card accent-cyan">
+          <p class="kpi-label">Confiance moyenne IA</p>
+          <!--
+            DOM SCRIPTING — Moyenne des scores de confiance sur la période
+            Source : GET /api/ai/stats/confidence-avg
+            Format attendu : 0.0–100.0
+            Cibler : #kpi-confidence-avg
+          -->
+          <p class="kpi-value" id="kpi-confidence-avg"></p>
+
+        </div>
+
+        <!-- Nouvelles menaces détectées -->
+        <div class="kpi-card accent-red">
+          <p class="kpi-label">Détectés par IA seule</p>
+          <!--
+            DOM SCRIPTING — Domaines jamais vus, bloqués par l'IA
+            Source : GET /api/ai/new-threats?period=24h
+            Cibler : #kpi-new-threats
+          -->
+          <p class="kpi-value" id="kpi-new-threats"></p>
+
+        </div>
+
+        <!-- Gain vs listes classiques -->
+        <div class="kpi-card accent-green">
+          <p class="kpi-label">Gain sur listes classiques</p>
+          <!--
+            DOM SCRIPTING — Calcul : (ai_only / total_blocked) * 100
+            Source : dérivé des deux endpoints précédents
+            Cibler : #kpi-ai-gain
+          -->
+          <p class="kpi-value" id="kpi-ai-gain"></p>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Comparaison IA vs Listes ─────────── -->
+    <div class="two-col">
+
+      <!-- Graphique comparatif -->
+      <div class="panel">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="dot dot-amber"></span>
+            IA vs Listes noires
+          </h2>
+        </div>
+        <!--
+          DOM SCRIPTING — Graphique barres groupées
+          Remplacer par <canvas id="chart-ai-vs-lists">
+          Source : GET /api/ai/comparison?period=7d
+          Données : [{ date: '2026-06-17', lists: 340, ai: 58 }, ...]
+          Initialiser Chart.js grouped bar chart
+          Couleurs : lists = var(--red), ai = var(--amber)
+        -->
+        <div class="chart-area" id="chart-ai-vs-lists-placeholder">
+          <canvas id="bar_groupe"></canvas>
+        </div>
+      </div>
+
+      <!-- Distribution des catégories IA -->
+      <div class="panel">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="dot dot-cyan"></span>
+            Domaines détectés par l'IA
+          </h2>
+        </div>
+        <!--
+          DOM SCRIPTING — Graphique doughnut des catégories
+          Remplacer par <canvas id="chart-ai-categories">
+          Source : GET /api/ai/categories/breakdown
+          Données ex : { pub: 48, tracking: 29, malware: 15, phishing: 8 }
+        -->
+        <div class="chart-area" id="chart-ai-categories-placeholder">
+          <canvas id="donut"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Liste domaines bloqués par l'IA ───── -->
+    <div class="panel">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="dot dot-amber"></span>
+          Domaines bloqués par l'IA uniquement
+        </h2>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <!--
+            DOM SCRIPTING — Filtre par catégorie
+            <select id="filter-ai-category"> injecter les options dynamiquement
+            Ajouter addEventListener('change', () => reloadAiTable())
+          -->
+            <!-- Options injectées par JS depuis /api/ai/categories -->
+          </select>
+        </div>
+      </div>
+
+      <!--
+        DOM SCRIPTING — Table IA enrichie
+        Source : GET /api/ai/detections?mode=ai-only&limit=20&category={filter}
+        Schéma attendu :
+          domain      : chaîne (domaine bloqué)
+          category    : "pub" | "tracking" | "malware" | "phishing" | ...
+          confidence  : nombre 0–100 (score IA)
+          first_seen  : timestamp ISO
+          count       : nombre de fois bloqué
+        Génération HTML par ligne :
+          <tr>
+            <td class="domain">${domain}</td>
+            <td><span class="badge badge-amber">${category}</span></td>
+            <td>
+              <div class="confidence-meter">
+                <div class="confidence-track">
+                  <div class="confidence-fill" style="width:${confidence}%"></div>
+                </div>
+                <span class="confidence-pct">${confidence}%</span>
+              </div>
+            </td>
+            <td class="font-mono text-muted">${new Date(first_seen).toLocaleString('fr-FR')}</td>
+            <td class="text-right font-mono">${count}</td>
+          </tr>
+      -->
+      <table class="data-table" id="ai-detections-table">
+        <thead>
+          <tr>
+            <th>Domaine</th>
+            <!--<th>Catégorie IA</th>-->
+            <th style="min-width:180px">Score de confiance</th>
+            <th>Première détection</th>
+          </tr>
+        </thead>
+        <tbody id="ai-detections-body">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Score de confiance — distribution ── -->
+    <div class="panel">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="dot dot-green"></span>
+          Distribution des scores de confiance
+        </h2>
+        <span class="text-muted" style="font-size:0.8rem;">
+          <!--
+            DOM SCRIPTING — Afficher le seuil de blocage actuel
+            Source : GET /api/ai/settings/threshold
+            Injecter dans #ai-threshold-label
+          -->
+          Seuil de blocage : <strong class="text-amber" id="ai-threshold-label">0.5</strong>
+        </span>
+      </div>
+      <!--
+        DOM SCRIPTING — Histogramme des scores
+        Remplacer par <canvas id="chart-confidence-dist">
+        Source : GET /api/ai/confidence-distribution
+        Données : [{ range: '50-60', count: 12 }, { range: '60-70', count: 34 }, ...]
+        Bar chart horizontal ou vertical selon préférence
+      -->
+      <div class="chart-area" style="height:160px;" id="chart-confidence-dist-placeholder">
+        <canvas id="barre_conf" style="width:70%"></canvas>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  /* ── Horloge ──────────────────────────────────── */
+  function updateClock() {
+    const el = document.getElementById('last-update');
+    if (el) el.textContent = new Date().toLocaleTimeString('fr-FR');
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── Date par défaut ──────────────────────────── */
+  (function() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const el = document.getElementById('page-date-range');
+    if (el) el.textContent = 'Aujourd\'hui · ' + dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  })();
+
+  /* ────────────────────────────────────────────────
+     TODO — À implémenter :
+
+     async function loadAiStats(period = 'today') {
+       try {
+         const [aiStats, detections, categories] = await Promise.all([
+           fetch(`/api/ai/stats?period=${period}`).then(r => r.json()),
+           fetch(`/api/ai/detections?mode=ai-only&limit=20`).then(r => r.json()),
+           fetch(`/api/ai/categories`).then(r => r.json()),
+         ]);
+
+         // KPIs
+         setKpi('kpi-ai-only', aiStats.aiOnly);
+         setKpi('kpi-confidence-avg', aiStats.confidenceAvg.toFixed(1) + '%');
+         setKpi('kpi-new-threats', aiStats.newThreats);
+         setKpi('kpi-ai-gain', ((aiStats.aiOnly / aiStats.totalBlocked) * 100).toFixed(1) + '<span class="kpi-unit">%</span>');
+
+         // Filtre catégories
+         const sel = document.getElementById('filter-ai-category');
+         categories.forEach(cat => {
+           const opt = document.createElement('option');
+           opt.value = cat.id;
+           opt.textContent = cat.label;
+           sel.appendChild(opt);
+         });
+
+         // Table détections
+         const tbody = document.getElementById('ai-detections-body');
+         tbody.innerHTML = detections.map(item => `
+           <tr>
+             <td class="domain">${item.domain}</td>
+             <td><span class="badge badge-amber">${item.category}</span></td>
+             <td>
+               <div class="confidence-meter">
+                 <div class="confidence-track">
+                   <div class="confidence-fill" style="width:${item.confidence}%"></div>
+                 </div>
+                 <span class="confidence-pct">${item.confidence}%</span>
+               </div>
+             </td>
+             <td class="font-mono text-muted">${new Date(item.first_seen).toLocaleString('fr-FR')}</td>
+             <td class="text-right font-mono">${item.count.toLocaleString('fr-FR')}</td>
+           </tr>
+         `).join('');
+
+       } catch(err) {
+         console.error('HomeGuard AI API error:', err);
+       }
+     }
+
+     function setKpi(id, value) {
+       const el = document.getElementById(id);
+       if (!el) return;
+       el.classList.remove('loading');
+       el.innerHTML = value;
+     }
+
+     loadAiStats('today');
+     document.getElementById('filter-ai-category')?.addEventListener('change', () => loadAiStats());
+  ──────────────────────────────────────────────── */
+</script>
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0">
+</script>
+<script src="IA.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HomeGuard — Vue d'ensemble</title>
+  <link rel="stylesheet" href="project integratif.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── Topbar ──────────────────────────────── -->
+  <header class="topbar">
+    <a href="stats de base.html" class="topbar-brand">
+      <div class="brand-icon">🛡</div>
+      Home<span><em>Guard</em></span>
+    </a>
+    <div class="topbar-right">
+      <span class="live-badge">EN DIRECT</span>
+      <!--
+        DOM SCRIPTING — Horloge temps réel
+        Injecter la date/heure dans #last-update via setInterval
+        Exemple : document.getElementById('last-update').textContent = new Date().toLocaleTimeString('fr-FR');
+      -->
+      <span class="last-update" id="last-update">--:--:--</span>
+    </div>
+  </header>
+
+  <!-- ── Sidebar ─────────────────────────────── -->
+  <nav class="sidebar">
+    <span class="sidebar-section-label">Navigation</span>
+
+    <a href="stats de base.html" class="nav-link active">
+      <span class="nav-icon">📊</span>
+      Vue d'ensemble
+    </a>
+    <a href="IA.html" class="nav-link">
+      <span class="nav-icon">🤖</span>
+      Détection IA
+    </a>
+    <a href="environnement.html" class="nav-link">
+      <span class="nav-icon">🌿</span>
+      Impact Écologique
+    </a>
+
+
+    <div class="sidebar-footer">
+      <!--
+        DOM SCRIPTING — Infos serveur
+        Injecter nom du réseau, IP locale, version API depuis /api/status
+        Exemple : fetch('/api/status').then(r=>r.json()).then(d=>{ ... })
+      -->
+      <p id="server-info">
+        Réseau : --<br/>
+        IP : --<br/>
+        API v--
+      </p>
+    </div>
+  </nav>
+
+  <!-- ── Main content ────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-text">
+        <p class="page-eyebrow">// Tableau de bord principal</p>
+        <h1 class="page-title">Vue d'ensemble DNS</h1>
+        <!--
+          DOM SCRIPTING — Date dynamique
+          Injecter la plage de date sélectionnée (ex: "Aujourd'hui · 23 juin 2026")
+          dans #page-date-range
+        -->
+        <p class="page-subtitle" id="page-date-range">Aujourd'hui · chargement…</p>
+      </div>
+    </div>
+
+    <!-- ── KPI : chiffres clés ──────────────── -->
+    <section aria-label="Indicateurs clés">
+      <div class="kpi-grid">
+
+        <!-- Total requêtes -->
+        <div class="kpi-card accent-cyan">
+          <p class="kpi-label">Requêtes DNS totales</p>
+          <!--
+            DOM SCRIPTING — Injecter valeur depuis API
+            Source : GET /api/stats/dns/total?period=today
+            Cibler : #kpi-total-requests
+            Exemple : document.getElementById('kpi-total-requests').textContent = data.total.toLocaleString('fr-FR');
+          -->
+          <p class="kpi-value" id="kpi-total-requests"></p>
+          <!--
+            DOM SCRIPTING — Delta (tendance vs hier)
+            Cibler : #kpi-total-delta
+            Ajouter/retirer classe .up / .down selon valeur
+          -->
+        </div>
+
+        <!-- Requêtes bloquées -->
+        <div class="kpi-card accent-red">
+          <p class="kpi-label">Requêtes bloquées</p>
+          <!--
+            DOM SCRIPTING — Source : GET /api/stats/dns/blocked?period=today
+            Cibler : #kpi-blocked
+          -->
+          <p class="kpi-value" id="kpi-blocked"></p>
+        </div>
+
+        <!-- Pourcentage bloqué -->
+        <div class="kpi-card accent-amber">
+          <p class="kpi-label">Taux de blocage</p>
+          <!--
+            DOM SCRIPTING — Calculer (bloquées / totales) * 100
+            Cibler : #kpi-block-rate
+            Injecter la valeur formatée ex: "23.4 %"
+          -->
+          <p class="kpi-value" id="kpi-block-rate"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Graphiques ───────────────────────── -->
+    <div class="two-col">
+
+      <!-- Courbe horaire des requêtes -->
+      <div class="panel">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="dot dot-cyan"></span>
+            Requêtes par domaine
+          </h2>
+        </div>
+
+        <div class="chart-area" id="chart-hourly-placeholder">
+            <canvas id="bar" style="width:100%; max-width:700px"></canvas>
+        </div>
+      </div>
+
+      <!-- Répartition blocage par type -->
+      <div class="panel">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="dot dot-red"></span>
+            Répartition des blocages
+          </h2>
+        </div>
+         <div class="chart-area" id="chart-block-types-placeholder">
+            <canvas id="donut" style="width:100%; max-width:700px">
+              
+            </canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Top 10 domaines bloqués ──────────── -->
+    <div class="panel">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="dot dot-red"></span>
+          Top 10 — Domaines les plus bloqués
+        </h2>
+
+      </div>
+
+      <table class="data-table" id="top10-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Domaine</th>
+            <th>Blocages</th>
+          </tr>
+        </thead>
+        <tbody id="top10-body">
+          <!-- Lignes injectées par JS -->
+          <tr>
+            <td colspan="5" class="text-center text-muted" style="padding:24px; font-family:var(--font-mono); font-size:0.8rem;">
+              Chargement des données…
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  /* ── Horloge temps réel ───────────────────────────
+     Injecte l'heure dans #last-update toutes les secondes
+  ──────────────────────────────────────────────── */
+  function updateClock() {
+    const el = document.getElementById('last-update');
+    if (el) el.textContent = new Date().toLocaleTimeString('fr-FR');
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── Date range par défaut ───────────────────────
+     À remplacer par la logique de sélection de période
+  ──────────────────────────────────────────────── */
+  (function() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const el = document.getElementById('page-date-range');
+    if (el) el.textContent = 'Aujourd\'hui · ' + dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  })();
+</script>
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0">
+</script>
+<script src="stats_base.js"></script>
+</body>
+</html>
