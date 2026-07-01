@@ -32,7 +32,10 @@ HomeGuard/
 │
 ├── Modèle IA
 │   ├── model.pkl            # Modèle entraîné (généré par train.py, non versionné)
-│   └── ai_blocks.json       # Log des domaines bloqués par l'IA
+│   ├── ai_blocks.json       # Log des domaines bloqués par l'IA
+│   ├── classifier.py        # Boucle de détection IA (mode production)
+│   ├── classifier_demo.py   # Boucle de détection IA (mode démo vidéo)
+│   └── train.py             # Entraînement du modèle Random Forest
 │
 └── Dashboard HTML/JS/CSS
     ├── stats de base.html   # Vue d'ensemble DNS
