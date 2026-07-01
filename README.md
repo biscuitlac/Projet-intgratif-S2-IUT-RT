@@ -22,13 +22,10 @@ Le projet est composé de trois parties :
 ```
 HomeGuard/
 │
-├── Backend Python
+├── Backend Python API
 │   ├── main.py              # API FastAPI (passerelle AdGuard Home)
 │   ├── autorun.py           # Lancement automatique avec uvicorn
 │   ├── config.py            # Configuration (à partir des variables d'env)
-│   ├── classifier.py        # Boucle de détection IA (mode production)
-│   ├── classifier_demo.py   # Boucle de détection IA (mode démo vidéo)
-│   └── train.py             # Entraînement du modèle Random Forest
 │
 ├── Modèle IA
 │   ├── model.pkl            # Modèle entraîné (généré par train.py, non versionné)
