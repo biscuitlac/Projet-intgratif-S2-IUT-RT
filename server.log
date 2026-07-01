@@ -1,0 +1,46 @@
+nohup: ignoring input
+INFO:     Will watch for changes in these directories: ['/root']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [1624] using WatchFiles
+INFO:     Started server process [1626]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     10.66.88.2:51002 - "GET /docs HTTP/1.1" 200 OK
+INFO:     10.66.88.2:51002 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     10.66.88.2:55752 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:54617 - "GET /stats/queried-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:56592 - "GET /stats/blocked-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:55752 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:56592 - "GET /stats/queried-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:54617 - "GET /stats/blocked-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:61692 - "GET /ia/stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:60958 - "GET /ia/blocks HTTP/1.1" 200 OK
+INFO:     10.66.88.2:58278 - "GET /ia/scores/distribution HTTP/1.1" 200 OK
+INFO:     10.66.88.2:63238 - "GET /ia/blocks/recent HTTP/1.1" 200 OK
+INFO:     10.66.88.2:64435 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:53852 - "GET /ia/vs-listes HTTP/1.1" 200 OK
+INFO:     10.66.88.2:55514 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:52207 - "GET /ia/stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:56643 - "GET /ia/blocks HTTP/1.1" 200 OK
+INFO:     10.66.88.2:51475 - "GET /ia/scores/distribution HTTP/1.1" 200 OK
+INFO:     10.66.88.2:51816 - "GET /ia/blocks/recent HTTP/1.1" 200 OK
+INFO:     10.66.88.2:50797 - "GET /ia/vs-listes HTTP/1.1" 200 OK
+INFO:     10.66.88.2:55127 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:51816 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:55127 - "GET /stats/queried-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:50797 - "GET /stats/blocked-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:50797 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:50660 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:57812 - "GET /ia/stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:59204 - "GET /ia/blocks HTTP/1.1" 200 OK
+INFO:     10.66.88.2:64590 - "GET /ia/scores/distribution HTTP/1.1" 200 OK
+INFO:     10.66.88.2:65485 - "GET /ia/blocks/recent HTTP/1.1" 200 OK
+INFO:     10.66.88.2:54600 - "GET /ia/vs-listes HTTP/1.1" 200 OK
+INFO:     10.66.88.2:57786 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:61484 - "GET /stats HTTP/1.1" 200 OK
+INFO:     10.66.88.2:51284 - "GET /stats/queried-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:62133 - "GET /stats/blocked-by-category HTTP/1.1" 200 OK
+INFO:     10.66.88.2:63545 - "GET /docs HTTP/1.1" 200 OK
+INFO:     10.66.88.2:63545 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     10.66.88.2:63545 - "GET / HTTP/1.1" 404 Not Found
+INFO:     10.66.88.2:63545 - "GET /favicon.ico HTTP/1.1" 404 Not Found
